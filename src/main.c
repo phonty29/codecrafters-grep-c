@@ -4,20 +4,33 @@
 #include <string.h>
 #include <ctype.h>
 
+bool match_digit(const char* input_line) {
+    for (int i = 0; i < strlen(input_line); i++) {
+        if (isdigit((unsigned char) input_line[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool match_word(const char* input_line) {
+    for (int i = 0; i < strlen(input_line); i++) {
+        if (isalnum(input_line[i]) || input_line[i] == '_') {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool match_pattern(const char* input_line, const char* pattern) {
     if (strlen(pattern) == 1) {
         return strchr(input_line, pattern[0]) != NULL;
     }
     else if (strcmp(pattern, "\\d") == 0) {
-        for (int i = 0; i < strlen(input_line); i++) {
-            if (isdigit((unsigned char) input_line[i])) {
-                return true;
-            }
-        }
-        return false;
+        return match_digit(input_line);
     }
-    else if (strcmp(pattern, "\w") == 0) {
-
+    else if (strcmp(pattern, "\\w") == 0) {
+        return match_word(input_line);
     }
     fprintf(stderr, "Unhandled pattern %s\n", pattern);
     return false;
