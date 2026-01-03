@@ -5,26 +5,22 @@
 #include <ctype.h>
 
 bool match_pattern(const char* input_line, const char* pattern) {
-    bool val = 0;
-    switch (strlen(pattern)){
-        case 1:
-            val = strchr(input_line, pattern[0]) != NULL;
-            break;
-        case 2:
-            if (strcmp(pattern, "-E") != 1) {
-                int il_len = strlen(input_line);
-                for (int i = 0; i < il_len; i++) {
-                    if (isdigit((unsigned char) input_line[i])) {
-                        val = 1;
-                        break;
-                    }
-                }
-            } 
-            break;
-        default:
-            fprintf(stderr, "Unhandled pattern %s\n", pattern);
+    if (strlen(pattern) == 1) {
+        return strchr(input_line, pattern[0]) != NULL;
     }
-    return val;
+    else if (strcmp(pattern, "\\d") == 0) {
+        for (int i = 0; i < strlen(input_line); i++) {
+            if (isdigit((unsigned char) input_line[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+    else if (strcmp(pattern, "\w") == 0) {
+
+    }
+    fprintf(stderr, "Unhandled pattern %s\n", pattern);
+    return false;
 }
 
 int main(int argc, char* argv[]) {
