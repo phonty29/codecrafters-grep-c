@@ -18,9 +18,18 @@ bool match_word(const char* input_line) {
     return false;
 }
 
-bool match_character_groups(const char* input_line, const char* pattern) {
+bool match_positive_char_groups(const char* input_line, const char* pattern) {
     for (int i = 1; i < strlen(pattern) - 1; i++) {
         if (strchr(input_line, pattern[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool match_negative_char_groups(const char* input_line, const char* pattern) {
+    for (int i = 2; i < strlen(pattern) - 1; i++) {
+        if (!strchr(input_line, pattern[i])) {
             return true;
         }
     }
@@ -38,7 +47,11 @@ bool match_pattern(const char* input_line, const char* pattern) {
         return match_word(input_line);
     }
     else if (pattern[0] == '[' && pattern[strlen(pattern)-1] == ']') {
-        return match_character_groups(input_line, pattern);
+        if (pattern[1] == '^') {
+            return match_negative_char_groups(input_line, pattern);
+        } else {
+            return match_positive_char_groups(input_line, pattern);
+        }
     }
     fprintf(stderr, "Unhandled pattern %s\n", pattern);
     return false;
